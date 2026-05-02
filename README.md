@@ -144,19 +144,46 @@ On success Spark writes Snappy Parquet files under data/processed/access_logs/. 
 
 Requires the Parquet data from the preprocessing pipeline above.
 
+From the **repository root**, with your venv activated:
+
 ### Run individual queries
+
+Per-Host Traffic Profiling:
 python3 -m src.queries.perhost_profiling.rdd
 python3 -m src.queries.perhost_profiling.dataframe
 python3 -m src.queries.perhost_profiling.sql
+Sessionization:
 python3 -m src.queries.sessionization.rdd
 python3 -m src.queries.sessionization.dataframe
 python3 -m src.queries.sessionization.sql
 ### Run full benchmark
 python3 -m benchmark.run_benchmark
+This runs all queries using all three APIs (RDD, DataFrame, SQL) and writes wall-clock times to `results/wall_clock.json`. Paths are read from `.env` (`PROCESSED_PATH`, `RESULTS_PATH`).
+
+By default, the benchmark runs each query and API once. Output includes elapsed time in seconds for each API and query combination:
+
+```json
+{
+  "perhost_profiling": [
+    {"api": "RDD", "elapsed_sec": 92.916},
+    {"api": "DataFrame", "elapsed_sec": 10.605},
+    {"api": "SQL", "elapsed_sec": 11.157}
+  ],
+  "sessionization": [
+    {"api": "RDD", "elapsed_sec": 597.373},
+    {"api": "DataFrame", "elapsed_sec": 6.216},
+    {"api": "SQL", "elapsed_sec": 6.651}
+  ]
+}
+```
 ### Generate comparison charts
 python3 results/generate_charts.py
-### Run analysis
+This runs all queries using RDD and DataFrame APIs and writes comparison bar charts to `results/charts/benchmark_comparison.png`.
+
+### Run results analysis
 python3 analysis/results_analysis.py
+This reads `results/wall_clock.json` and prints a detailed summary including speedup factors for each API relative to RDD baseline.
+
 ### Using Makefile shortcuts
 make setup      # Install dependencies
 make parse      # Run log parsing pipeline

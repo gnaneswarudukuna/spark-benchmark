@@ -103,3 +103,15 @@ python3 -m benchmark.run_benchmark
 - Git and GitHub
 - Matplotlib
 - Pandas
+## Test Cases
+
+- We have unit tests using pytest to ensure that each API produces consistent output
+- Tests verify that DataFrame and SQL sessionization return the same number of unique hosts
+- Tests verify all required output columns exist for each query
+- Tests verify all hosts have at least 1 session
+
+To run the tests locally (Parquet must already exist):
+
+```bash
+pytest tests/ -v
+```

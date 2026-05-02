@@ -4,10 +4,61 @@
 **Course:** COMPSCI 532 — Systems for Data Science  
 **University:** UMass Amherst
 
-## Project Overview
+## Project Description and Relevance
 
-This project compares three PySpark APIs — RDD, DataFrame and SQL — by implementing the same data analysis queries in all three ways and measuring performance differences on real world data containing 10 million HTTP requests.
+Modern data engineering teams routinely process logs, clickstreams, 
+and event records at scale using distributed batch-processing 
+frameworks. Understanding how different programming abstractions 
+within these frameworks affect performance is a critical systems 
+concern. This project investigates that question empirically using 
+Apache Spark and a real-world e-commerce web server log dataset.
 
+Specifically, I benchmark three levels of abstraction available in 
+PySpark — the low-level RDD API, the structured DataFrame API, and 
+Spark SQL — by implementing the same analytical queries at each level 
+and measuring key systems performance metrics. The dataset used is the 
+[Zanbil.ir E-Commerce Web Server Access Logs](https://www.kaggle.com/datasets/eliasdabbas/web-server-access-logs) [1] 
+— approximately 10.3 million HTTP requests totaling ~3.3 GB 
+uncompressed, recorded from a real Iranian e-commerce platform. It 
+uses the Apache Combined Log Format, containing fields for client IP, 
+timestamp, HTTP method, request path, status code, and response bytes. 
+Two additional fields (Referer and User-Agent) are present but ignored 
+during parsing.
+
+The analytical pipeline consists of two core queries:
+
+1. **Per-Host Traffic Profiling** — aggregating request counts, byte 
+volumes, error rates, and distinct endpoint counts per unique client IP
+2. **Sessionization** — grouping each client's requests into sessions 
+defined by a 30-minute inactivity threshold, then computing session-level 
+metrics such as duration and request count per session
+
+Each query is implemented independently using all three APIs — RDD, 
+DataFrame, and SQL — producing identical outputs to ensure a fair 
+comparison. The central systems question is: **how much does Spark's 
+Catalyst query optimizer improve performance over hand-tuned RDD code, 
+and under what conditions?**
+
+The RDD API requires the programmer to manually manage every 
+transformation — including partitioning strategy, shuffle operations, 
+and aggregation logic. In contrast, the DataFrame and SQL interfaces 
+delegate these decisions to Spark's Catalyst optimizer, which 
+automatically rewrites query plans, pushes filters early, and selects 
+efficient join and aggregation strategies. By holding the workload 
+constant across all three implementations, we can isolate the effect 
+of the optimizer on real execution behavior.
+
+This work connects directly to the course's coverage of the Spark 
+execution model (Lecture 8), the original RDD paper by Zaharia et 
+al. [2], and the broader theme of evaluating system design tradeoffs 
+between programmer control and automatic optimization.
+
+To characterize performance, four systems-level metrics are collected 
+for each query and API combination:
+- **Wall-clock execution time** — end-to-end latency measured using Python timers
+- **Shuffle read/write volume** — data moved across the network during wide transformations
+- **Number of stages and tasks** — complexity of the physical execution plan
+- **Peak memory usage** — maximum JVM heap consumed during execution
 **Core Question:** How much does Spark's Catalyst optimizer improve performance over manual RDD code?
 
 ## Dataset

@@ -1,0 +1,12 @@
+{
+  "perhost_profiling": [
+    {"api": "RDD", "elapsed_sec": 92.916},
+    {"api": "DataFrame", "elapsed_sec": 10.605},
+    {"api": "SQL", "elapsed_sec": 11.157}
+  ],
+  "sessionization": [
+    {"api": "RDD", "elapsed_sec": 597.373},
+    {"api": "DataFrame", "elapsed_sec": 6.216},
+    {"api": "SQL", "elapsed_sec": 6.651}
+  ]
+}

@@ -273,11 +273,41 @@ Key observations:
 - The Catalyst optimizer is the primary reason for the performance difference
 - SQL and DataFrame perform similarly because they share the same optimizer
 
-### Why RDD is slower
+### Wall-clock scaling analysis
+
+![Wall Clock Scaling](results/charts/wall_clock_scaling.png)
+
+Key observations:
+- RDD scales poorly — execution time grows exponentially with data size
+- DataFrame and SQL scale efficiently — nearly flat growth due to Catalyst optimization
+- At 5% scale all APIs are competitive — differences become dramatic at 100%
+- No optimizer means RDD must re-evaluate every transformation for every extra row
+
+### Shuffle read/write volume
+
+![Shuffle Volume](results/charts/shuffle_volume.png)
+
+Key observations:
+- DataFrame and SQL generate more shuffle than RDD for per-host profiling
+- This is because Catalyst breaks queries into more granular optimized stages
+- Despite higher shuffle volume DataFrame and SQL are still much faster
+- Catalyst optimizer compensates by making each shuffle stage more efficient
+
+### Shuffle volume scaling
+
+![Shuffle Scaling](results/charts/shuffle_scaling.png)
+
+Key observations:
+- All APIs scale linearly with data size for shuffle volume
+- DataFrame and SQL consistently generate more shuffle than RDD
+- Sessionization shuffle grows linearly — window functions have unavoidable shuffle cost
+- RDD shuffle is lower but execution time is much higher — more CPU work per byte
+
+### Why RDD is slower despite less shuffle
 - No automatic query optimization — every step runs exactly as written
-- groupByKey shuffles ALL data across the network before aggregation
-- Python UDFs add serialization overhead between JVM and Python processes
-- Window functions in Python require loading all timestamps per user into memory
+- groupByKey loads ALL values into memory before aggregation
+- Python UDFs add serialization overhead between JVM and Python
+- Window functions require loading all timestamps per user into memory
 
 ### Why DataFrame and SQL are faster
 - Catalyst optimizer automatically rewrites queries for efficiency

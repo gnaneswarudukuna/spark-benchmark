@@ -192,6 +192,65 @@ make test       # Run all tests
 make charts     # Generate comparison charts
 make analysis   # Print results analysis
 make help       # Show all available commands
+
+
+## Running on a Larger Cluster (Future Work)
+
+The current implementation runs locally on a single machine using
+`SPARK_MASTER=local[N]`. For production-scale benchmarking the next
+step would be deploying on a managed Spark cluster such as Google
+Cloud Dataproc or AWS EMR.
+
+### Recommended cluster configuration
+
+| Component | Specification |
+|-----------|--------------|
+| Driver node | 1 × n1-standard-4 (4 vCPUs, 16 GB RAM) |
+| Worker nodes | 2 × n1-standard-4 (4 vCPUs, 16 GB RAM each) |
+| Total cores | 8 CPU cores |
+| Total RAM | 32 GB distributed |
+| Storage | Google Cloud Storage (GCS) |
+
+### Why a cluster matters for this benchmark
+
+The dataset is ~3.3 GB which yields approximately 26 natural partitions
+at Spark's default 128 MB block size. On a local machine all partitions
+compete for the same CPU and memory. On a real cluster each partition
+is processed by a dedicated executor core — this would make the
+performance differences between RDD, DataFrame and SQL even more
+pronounced since network shuffle costs become visible.
+
+### Expected impact on results
+
+- **RDD** would be disproportionately slower on a cluster because
+  `groupByKey` and Python UDFs generate significantly more network
+  shuffle than Catalyst-optimized plans
+- **DataFrame and SQL** would benefit more from parallelism because
+  Catalyst generates efficient partial aggregation that reduces
+  shuffle volume before data crosses the network
+- The **96x speedup** observed locally for sessionization would likely
+  be even larger on a real distributed cluster
+
+### GCP Dataproc deployment (planned)
+
+Prerequisites:
+- `gcloud` CLI installed and authenticated
+- GCP project with billing enabled
+- Dataset uploaded to Google Cloud Storage
+
+```
+# One-time setup
+gcloud dataproc clusters create spark-benchmark-cluster \
+    --region=us-central1 \
+    --num-workers=2 \
+    --worker-machine-type=n1-standard-4 \
+    --master-machine-type=n1-standard-4
+
+# Submit benchmark job
+gcloud dataproc jobs submit pyspark benchmark/run_benchmark.py \
+    --cluster=spark-benchmark-cluster \
+    --region=us-central1
+```
 ## Test Cases
 
 - Unit tests using pytest verify that each API produces consistent and correct output

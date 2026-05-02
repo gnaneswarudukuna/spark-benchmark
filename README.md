@@ -267,41 +267,50 @@ pytest tests/ -v
 
 ![Benchmark Comparison](results/charts/benchmark_comparison.png)
 
-Key observations:
 - RDD is significantly slower than DataFrame and SQL for both queries
 - Sessionization shows the biggest gap — RDD takes 597 seconds vs 6 seconds for DataFrame
-- The Catalyst optimizer is the primary reason for the performance difference
-- SQL and DataFrame perform similarly because they share the same optimizer
-
-### Wall-clock scaling analysis
-
-![Wall Clock Scaling](results/charts/wall_clock_scaling.png)
-
-Key observations:
-- RDD scales poorly — execution time grows exponentially with data size
-- DataFrame and SQL scale efficiently — nearly flat growth due to Catalyst optimization
-- At 5% scale all APIs are competitive — differences become dramatic at 100%
-- No optimizer means RDD must re-evaluate every transformation for every extra row
+- DataFrame and SQL perform similarly because they share the same Catalyst optimizer
+- **Key finding:** Catalyst optimizer makes DataFrame and SQL up to 96x faster than RDD
 
 ### Shuffle read/write volume
 
 ![Shuffle Volume](results/charts/shuffle_volume.png)
 
-Key observations:
 - DataFrame and SQL generate more shuffle than RDD for per-host profiling
 - This is because Catalyst breaks queries into more granular optimized stages
-- Despite higher shuffle volume DataFrame and SQL are still much faster
-- Catalyst optimizer compensates by making each shuffle stage more efficient
+- Despite higher shuffle volume DataFrame and SQL are still much faster overall
+- RDD has lower shuffle but much higher CPU and Python serialization overhead
 
-### Shuffle volume scaling
+> **Note:** Sessionization shuffle is similar across DataFrame and SQL because window functions have an unavoidable shuffle cost regardless of optimizer
+
+### Stages and tasks
+
+![Stages and Tasks](results/charts/stages_and_tasks.png)
+
+- SQL generates the most stages — Catalyst breaks the query into many small optimized steps
+- RDD has the fewest stages — manual code has fewer but heavier steps
+- More stages does not mean slower — Catalyst stages are highly optimized
+- DataFrame has more tasks than RDD because it parallelizes more aggressively
+
+> **Note:** In general DataFrame and SQL have more stages and tasks because Catalyst optimizer breaks the query down into more optimized granular sub-steps that run in parallel
+
+### Scaling analysis (5% → 100% of the dataset)
+
+![Wall Clock Scaling](results/charts/wall_clock_scaling.png)
+
+- RDD scales poorly — execution time grows exponentially with data size
+- DataFrame and SQL scale efficiently — nearly flat growth due to Catalyst optimization
+- At 5% scale all APIs are competitive — differences become dramatic at 100%
+- No optimizer means RDD must process every extra row with full Python overhead
 
 ![Shuffle Scaling](results/charts/shuffle_scaling.png)
 
-Key observations:
 - All APIs scale linearly with data size for shuffle volume
 - DataFrame and SQL consistently generate more shuffle than RDD
 - Sessionization shuffle grows linearly — window functions have unavoidable shuffle cost
-- RDD shuffle is lower but execution time is much higher — more CPU work per byte
+- Catalyst optimizer compensates for higher shuffle by making each stage more efficient
+
+> **Note:** No optimizer means RDD scales poorly with data size. Catalyst pre-aggregation makes shuffles invariant to data size for simple queries like per-host profiling
 
 ### Why RDD is slower despite less shuffle
 - No automatic query optimization — every step runs exactly as written

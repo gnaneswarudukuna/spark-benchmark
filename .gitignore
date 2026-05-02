@@ -1,0 +1,26 @@
+# Data files — too large for GitHub
+data/raw/
+data/processed/
+
+# Virtual environment
+venv/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+
+# Spark temp files
+spark-warehouse/
+derby.log
+metastore_db/
+
+# Environment file — contains secrets
+.env
+
+# OS files
+.DS_Store
+
+# Jupyter checkpoints
+.ipynb_checkpoints/

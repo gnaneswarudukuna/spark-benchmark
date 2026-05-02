@@ -200,6 +200,8 @@ Key observations:
 - Tungsten execution engine — optimized memory management and code generation
 
 ## Project Structure
+
+```
 spark-benchmark/
 ├── src/
 │   ├── utils/
@@ -232,6 +234,7 @@ spark-benchmark/
 ├── Makefile
 ├── .env.example
 └── requirements.txt
+```
 ## Technologies
 
 | Tool | Version | Purpose |

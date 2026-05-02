@@ -1,0 +1,202 @@
+{
+  "pct_5": {
+    "scale_pct": 5,
+    "row_count": 517872,
+    "queries": {
+      "perhost_profiling": [
+        {
+          "api": "RDD",
+          "elapsed_sec": 1.513,
+          "shuffle_read_mb": 12.82,
+          "shuffle_write_mb": 12.82,
+          "num_stages": 3,
+          "num_tasks": 9
+        },
+        {
+          "api": "DataFrame",
+          "elapsed_sec": 1.252,
+          "shuffle_read_mb": 32.88,
+          "shuffle_write_mb": 32.88,
+          "num_stages": 7,
+          "num_tasks": 27
+        },
+        {
+          "api": "SQL",
+          "elapsed_sec": 1.036,
+          "shuffle_read_mb": 41.86,
+          "shuffle_write_mb": 35.52,
+          "num_stages": 14,
+          "num_tasks": 55
+        }
+      ],
+      "sessionization": [
+        {
+          "api": "DataFrame",
+          "elapsed_sec": 1.083,
+          "shuffle_read_mb": 9.37,
+          "shuffle_write_mb": 9.37,
+          "num_stages": 6,
+          "num_tasks": 53
+        },
+        {
+          "api": "SQL",
+          "elapsed_sec": 0.987,
+          "shuffle_read_mb": 11.09,
+          "shuffle_write_mb": 11.09,
+          "num_stages": 11,
+          "num_tasks": 102
+        }
+      ]
+    }
+  },
+  "pct_25": {
+    "scale_pct": 25,
+    "row_count": 2593039,
+    "queries": {
+      "perhost_profiling": [
+        {
+          "api": "RDD",
+          "elapsed_sec": 6.875,
+          "shuffle_read_mb": 50.34,
+          "shuffle_write_mb": 50.34,
+          "num_stages": 3,
+          "num_tasks": 9
+        },
+        {
+          "api": "DataFrame",
+          "elapsed_sec": 2.618,
+          "shuffle_read_mb": 116.06,
+          "shuffle_write_mb": 116.06,
+          "num_stages": 7,
+          "num_tasks": 28
+        },
+        {
+          "api": "SQL",
+          "elapsed_sec": 2.732,
+          "shuffle_read_mb": 134.62,
+          "shuffle_write_mb": 120.53,
+          "num_stages": 14,
+          "num_tasks": 60
+        }
+      ],
+      "sessionization": [
+        {
+          "api": "DataFrame",
+          "elapsed_sec": 1.393,
+          "shuffle_read_mb": 41.17,
+          "shuffle_write_mb": 41.17,
+          "num_stages": 6,
+          "num_tasks": 53
+        },
+        {
+          "api": "SQL",
+          "elapsed_sec": 1.46,
+          "shuffle_read_mb": 44.03,
+          "shuffle_write_mb": 44.03,
+          "num_stages": 11,
+          "num_tasks": 102
+        }
+      ]
+    }
+  },
+  "pct_50": {
+    "scale_pct": 50,
+    "row_count": 5181989,
+    "queries": {
+      "perhost_profiling": [
+        {
+          "api": "RDD",
+          "elapsed_sec": 21.704,
+          "shuffle_read_mb": 90.92,
+          "shuffle_write_mb": 90.92,
+          "num_stages": 3,
+          "num_tasks": 9
+        },
+        {
+          "api": "DataFrame",
+          "elapsed_sec": 4.684,
+          "shuffle_read_mb": 206.26,
+          "shuffle_write_mb": 206.26,
+          "num_stages": 7,
+          "num_tasks": 26
+        },
+        {
+          "api": "SQL",
+          "elapsed_sec": 4.292,
+          "shuffle_read_mb": 226.76,
+          "shuffle_write_mb": 211.75,
+          "num_stages": 14,
+          "num_tasks": 56
+        }
+      ],
+      "sessionization": [
+        {
+          "api": "DataFrame",
+          "elapsed_sec": 2.022,
+          "shuffle_read_mb": 77.54,
+          "shuffle_write_mb": 77.54,
+          "num_stages": 6,
+          "num_tasks": 53
+        },
+        {
+          "api": "SQL",
+          "elapsed_sec": 2.075,
+          "shuffle_read_mb": 81.06,
+          "shuffle_write_mb": 81.06,
+          "num_stages": 11,
+          "num_tasks": 102
+        }
+      ]
+    }
+  },
+  "pct_100": {
+    "scale_pct": 100,
+    "row_count": 10364866,
+    "queries": {
+      "perhost_profiling": [
+        {
+          "api": "RDD",
+          "elapsed_sec": 94.517,
+          "shuffle_read_mb": 166.91,
+          "shuffle_write_mb": 166.91,
+          "num_stages": 3,
+          "num_tasks": 9
+        },
+        {
+          "api": "DataFrame",
+          "elapsed_sec": 8.356,
+          "shuffle_read_mb": 383.28,
+          "shuffle_write_mb": 383.28,
+          "num_stages": 7,
+          "num_tasks": 32
+        },
+        {
+          "api": "SQL",
+          "elapsed_sec": 8.488,
+          "shuffle_read_mb": 417.08,
+          "shuffle_write_mb": 390.06,
+          "num_stages": 14,
+          "num_tasks": 68
+        }
+      ],
+      "sessionization": [
+        {
+          "api": "DataFrame",
+          "elapsed_sec": 3.758,
+          "shuffle_read_mb": 149.06,
+          "shuffle_write_mb": 149.06,
+          "num_stages": 6,
+          "num_tasks": 53
+        },
+        {
+          "api": "SQL",
+          "elapsed_sec": 3.865,
+          "shuffle_read_mb": 153.47,
+          "shuffle_write_mb": 153.47,
+          "num_stages": 11,
+          "num_tasks": 102
+        }
+      ]
+    }
+  }
+}
